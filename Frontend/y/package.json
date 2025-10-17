@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "npm rebuild lightningcss --build-from-source",
     "build": "vite build",
     "postinstall": "npm rebuild lightningcss --build-from-source || true",
     "lint": "eslint .",
