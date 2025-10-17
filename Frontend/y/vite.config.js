@@ -1,16 +1,17 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
-import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 
+// ✅ Correct Tailwind setup (uses PostCSS, not @tailwindcss/vite)
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react()],
   build: {
-    cssMinify: 'esbuild', // keep this to avoid lightningcss
+    cssMinify: 'esbuild', // avoids lightningcss issue
     outDir: 'dist'
   },
-    css: {
-    transformer: 'postcss'
+  css: {
+    // Tailwind runs through PostCSS automatically
+    postcss: './postcss.config.js'
   },
   resolve: {
     alias: {
