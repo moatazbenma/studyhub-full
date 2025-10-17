@@ -15,7 +15,7 @@ export default defineConfig({
       '322bd694d365.ngrok-free.app'
     ]
   },
-    build: {
-    cssMinify: 'esbuild' // or remove this line to use default
+  css: {
+    transformer: 'postcss'
   }
 })
