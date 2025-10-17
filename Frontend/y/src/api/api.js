@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/",
+  baseURL: "https://studyhub-full.onrender.com/api/",
 });
 
 // ✅ Add Authorization Header before each request
@@ -35,7 +35,7 @@ API.interceptors.response.use(
           return Promise.reject(error);
         }
 
-        const res = await axios.post("http://127.0.0.1:8000/api/token/refresh/", {
+        const res = await axios.post("https://studyhub-full.onrender.com/api/token/refresh/", {
           refresh: refresh,
         });
 
