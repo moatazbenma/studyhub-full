@@ -4,9 +4,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "postinstall": "npm rebuild lightningcss --build-from-source || true",
     "dev": "vite",
     "build": "vite build",
+    "postinstall": "npm rebuild lightningcss --build-from-source || true",
     "lint": "eslint .",
     "preview": "vite preview"
   },
