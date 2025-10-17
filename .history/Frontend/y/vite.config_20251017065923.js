@@ -5,21 +5,17 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  build: {
-    cssMinify: 'esbuild', // keep this to avoid lightningcss
-    outDir: 'dist'
-  },
-    css: {
-    transformer: 'postcss'
-  },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
   server: {
     allowedHosts: [
       '322bd694d365.ngrok-free.app'
     ]
+  },
+    build: {
+    cssMinify: 'esbuild' // or remove this line to use default
   }
 })

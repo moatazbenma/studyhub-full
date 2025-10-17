@@ -5,21 +5,20 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  build: {
-    cssMinify: 'esbuild', // keep this to avoid lightningcss
-    outDir: 'dist'
-  },
-    css: {
-    transformer: 'postcss'
-  },
+    build: {
+    cssMinify: 'esbuild' // Force Vite to use esbuild instead of lightningcss
+  }
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
   server: {
     allowedHosts: [
       '322bd694d365.ngrok-free.app'
     ]
+  },
+  css: {
+    transformer: 'postcss'
   }
 })

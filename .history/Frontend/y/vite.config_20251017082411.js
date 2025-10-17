@@ -9,9 +9,7 @@ export default defineConfig({
     cssMinify: 'esbuild', // keep this to avoid lightningcss
     outDir: 'dist'
   },
-    css: {
-    transformer: 'postcss'
-  },
+  
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
