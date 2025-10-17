@@ -5,6 +5,9 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+    build: {
+    cssMinify: 'esbuild' // Force Vite to use esbuild instead of lightningcss
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
