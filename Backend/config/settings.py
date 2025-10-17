@@ -35,7 +35,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",   # React (CRA dev server)
     "http://127.0.0.1:5173",   # Vite dev server
     "http://localhost:5173",
-    "https://322bd694d365.ngrok-free.app", # some setups use localhost instead of 127.0.0.1
+    "https://322bd694d365.ngrok-free.app",
+    "https://studyhub-full-1.onrender.com" # some setups use localhost instead of 127.0.0.1
 ]
 
 from dotenv import load_dotenv
