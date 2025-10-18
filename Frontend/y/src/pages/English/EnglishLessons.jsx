@@ -259,7 +259,7 @@ const submitQuiz = () => {
                   setLoading(true);
                   setWritingFeedback(null);
                   try {
-                    const res = await fetch("http://127.0.0.1:8000/api/english/correct-writing", {
+                    const res = await fetch("https://studyhub-full.onrender.com/api/english/correct-writing", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({ text: userWriting }),
