@@ -32,17 +32,36 @@ def my_profile(request):
 @parser_classes([MultiPartParser, FormParser])
 @permission_classes([IsAuthenticated])
 def update_profile(request):
-    """Update bio and profile image"""
+    """Update username, email, bio and profile image"""
     user = request.user
-    bio = request.data.get("bio", None)
-    if bio is not None:
-        user.bio = bio
+    print(f"=== Profile Update Request ===")
+    print(f"User: {user.username}")
+    print(f"POST data: {request.data}")
+    print(f"FILES: {request.FILES.keys()}")
+    
+    # Update text fields
+    if "username" in request.data and request.data["username"]:
+        user.username = request.data["username"]
+    if "email" in request.data and request.data["email"]:
+        user.email = request.data["email"]
+    if "bio" in request.data:
+        user.bio = request.data["bio"]
 
-    if "image" in request.FILES:
-        user.profile_image = request.FILES["image"]
+    # Handle image upload
+    if "profile_image" in request.FILES:
+        image_file = request.FILES["profile_image"]
+        print(f"Uploading profile_image: {image_file.name} ({image_file.size} bytes)")
+        user.profile_image = image_file
+    elif "image" in request.FILES:
+        image_file = request.FILES["image"]
+        print(f"Uploading image: {image_file.name} ({image_file.size} bytes)")
+        user.profile_image = image_file
 
     user.save()
+    print(f"Profile image saved to: {user.profile_image}")
+    
     serializer = UserSerializer(user, context={"request": request})
+    print(f"Response data: {serializer.data}")
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 

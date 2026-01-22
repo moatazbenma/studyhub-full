@@ -27,24 +27,46 @@ const features = [
 
 const Features = () => {
   return (
-    <section id="features" className="py-20 bg-gradient-to-br from-purple-50 to-white text-center">
-      <h2 className="text-4xl font-bold text-gray-800 mb-10">Key Features</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto px-6">
-        {features.map((f, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: i * 0.1 }}
-            className="p-6 bg-white rounded-2xl shadow-md hover:shadow-xl transition"
-          >
-            <div className="flex flex-col items-center gap-4">
-              {f.icon}
-              <h3 className="text-xl font-semibold text-gray-800">{f.title}</h3>
-              <p className="text-gray-600">{f.description}</p>
-            </div>
-          </motion.div>
-        ))}
+    <section id="features" className="py-24 bg-gradient-to-br from-white via-indigo-50 to-white text-center">
+      <div className="max-w-7xl mx-auto px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-6"
+        >
+          <span className="text-purple-600 font-semibold text-sm uppercase tracking-wider">Our Features</span>
+        </motion.div>
+        
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="text-5xl md:text-6xl font-bold text-gray-900 mb-20 leading-tight"
+        >
+          Powerful Features for <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Your Success</span>
+        </motion.h2>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {features.map((f, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: i * 0.1 }}
+              whileHover={{ y: -10, boxShadow: "0 20px 40px rgba(0, 0, 0, 0.1)" }}
+              className="p-8 bg-white rounded-2xl shadow-md hover:shadow-2xl transition duration-300 border border-gray-100 cursor-pointer group"
+            >
+              <div className="flex flex-col items-center gap-4">
+                <div className="p-4 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-xl group-hover:from-purple-200 group-hover:to-indigo-200 transition duration-300">
+                  {f.icon}
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">{f.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{f.description}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );

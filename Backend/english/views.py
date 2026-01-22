@@ -4,12 +4,6 @@ import requests
 import json
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-import openai
-import os
-from google.cloud import aiplatform
-from django.conf import settings
-from google import genai
-
 
 
 @csrf_exempt
@@ -53,28 +47,34 @@ def correct_writing(request):
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 
-client = genai.Client()
-
 @api_view(["POST"])
 def practice_english(request):
+    """
+    Simple English practice endpoint - returns encouragement messages
+    For full AI conversation, integrate with a cloud-based AI service
+    """
     user_message = request.data.get("message", "").strip()
     if not user_message:
         return Response({"error": "No message provided"}, status=400)
 
     try:
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=(
-                "You are Hai, a friendly English conversation partner. "
-                "Your goal is to help users practice English naturally. "
-                "Always reply in less than 2 short sentences, be casual and friendly, "
-                "and ask simple follow-up questions when possible.\n\n"
-                f"User: {user_message}"
-            ),
-        )
-
-        reply = response.text or "Sorry, I couldn’t respond."
+        # Simple responses for practice encouragement
+        responses = [
+            "Great job practicing! Keep it up.",
+            "That's wonderful! Your English is improving.",
+            "Excellent effort! Can you try again with more detail?",
+            "Well done! Your practice is paying off.",
+            "Fantastic! You're making great progress with English.",
+        ]
+        
+        # Simple logic - suggest more practice for very short messages
+        if len(user_message.split()) < 3:
+            reply = "Try writing longer sentences to practice more!"
+        else:
+            import random
+            reply = random.choice(responses)
+        
         return Response({"reply": reply})
 
     except Exception as e:
-        return Response({"reply": f"Error: {e}"}, status=500)
+        return Response({"reply": "Keep practicing your English!"}, status=200)

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import API from "../../api/api";
 import { useNavigate } from "react-router-dom";
-import { LogOut, Trash2 } from "lucide-react";
+import { LogOut, Trash2, User, Mail, Lock, BookOpen, Calendar, CheckCircle2 } from "lucide-react";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
@@ -49,6 +49,13 @@ const Profile = () => {
     }
   };
 
+  const getFullImageUrl = (url) => {
+    if (!url) return "https://via.placeholder.com/150";
+    if (url.startsWith('http')) return url;
+    // If it's a relative URL, prepend the backend base URL
+    return `http://localhost:8000${url}`;
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
@@ -57,8 +64,13 @@ const Profile = () => {
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setImage(file);
-    setPreview(URL.createObjectURL(file));
+    if (file) {
+      console.log("Image selected:", file.name);
+      setImage(file);
+      const reader = new FileReader();
+      reader.onload = (event) => setPreview(event.target.result);
+      reader.readAsDataURL(file);
+    }
   };
   const handlePasswordChange = (e) => setPasswordForm({ ...passwordForm, [e.target.name]: e.target.value });
 
@@ -69,16 +81,31 @@ const Profile = () => {
     formData.append("username", form.username);
     formData.append("email", form.email);
     formData.append("bio", form.bio);
-    if (image) formData.append("image", image);
+    if (image) {
+      console.log("Uploading image:", image.name, "Size:", image.size, "Type:", image.type);
+      formData.append("profile_image", image);
+    }
 
     try {
       const res = await API.post("auth/profile/update/", formData, {
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
+        headers: { Authorization: `Bearer ${token}` },
       });
+      console.log("Profile update response:", res.data);
+      console.log("Image URL:", res.data.profile_image_url);
+      console.log("Profile Image Field:", res.data.profile_image);
+      
       setProfile(res.data);
+      setImage(null);
+      setPreview(null);
+      // Force re-fetch to ensure fresh data
+      setTimeout(() => {
+        fetchProfile();
+      }, 500);
+      
       setStatus({ message: "✅ Profile updated successfully!", type: "success" });
       setTimeout(() => setStatus({ message: "", type: "" }), 2500);
-    } catch {
+    } catch (error) {
+      console.error("Profile update error:", error.response?.data || error.message);
       setStatus({ message: "❌ Failed to update profile.", type: "error" });
     } finally {
       setLoading(false);
@@ -121,167 +148,288 @@ const Profile = () => {
     }
   };
 
-  if (!profile) return <div className="p-6 text-center text-gray-500">Loading profile...</div>;
+  if (!profile) return (
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
+      <motion.div animate={{ opacity: [0.5, 1] }} transition={{ duration: 1, repeat: Infinity }}>
+        <p className="text-gray-600 font-semibold text-lg">Loading profile...</p>
+      </motion.div>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-100 p-6">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
-        <h1 className="text-5xl font-extrabold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent mb-4 md:mb-0">
-          StudyHub
-        </h1>
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-2 rounded-lg bg-purple-500 px-5 py-2 text-white hover:bg-red-600 transition-colors duration-300"
-        >
-          <LogOut size={24} /> Logout
-        </button>
-      </header>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 py-12 pb-32 overflow-x-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div className="absolute top-40 right-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-1/2 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+      </div>
 
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10">
-        {/* Profile & Password */}
-        <div className="bg-white shadow-xl rounded-3xl p-8 relative overflow-hidden border border-gray-200">
+      <div className="relative z-10 flex justify-center px-6 md:px-8">
+        <div className="w-full max-w-7xl">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16"
+          >
+            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4 md:mb-0">
+              Profile
+            </h1>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleLogout}
+              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 px-6 py-3 text-white hover:from-red-600 hover:to-pink-600 transition-all duration-300 shadow-lg font-semibold"
+            >
+              <LogOut size={20} /> Logout
+            </motion.button>
+          </motion.div>
+
+          {/* Status Message */}
           <AnimatePresence>
             {status.message && (
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className={`absolute top-0 left-0 right-0 text-center py-2 font-medium ${
-                  status.type === "success" ? "bg-green-500" : "bg-red-500"
-                } text-white rounded-b-lg`}
+                className={`mb-8 rounded-xl px-6 py-4 font-semibold text-center ${
+                  status.type === "success" ? "bg-green-100 border border-green-500 text-green-700" : "bg-red-100 border border-red-500 text-red-700"
+                }`}
               >
                 {status.message}
               </motion.div>
             )}
           </AnimatePresence>
 
-          <div className="text-center mb-8">
-            <div className="relative w-32 h-32 mx-auto mb-4">
-              <img
-                src={preview || profile.profile_image_url || "https://via.placeholder.com/150"}
-                alt="Profile"
-                className="w-32 h-32 rounded-full object-cover border-4 border-indigo-500 shadow-lg"
-              />
-              <label className="absolute bottom-0 right-0 bg-indigo-600 text-white px-3 py-1 rounded-full cursor-pointer hover:bg-indigo-700 text-sm font-medium">
-                Change
-                <input type="file" hidden accept="image/*" onChange={handleImageChange} />
-              </label>
-            </div>
-            <h2 className="text-2xl font-bold text-gray-800">{profile.username}</h2>
-            <p className="text-gray-500">{profile.email}</p>
-          </div>
-
-          {/* Modern Form Inputs */}
-          <form onSubmit={handleSubmit} className="space-y-5 mb-6">
-            <div className="relative">
-              <input
-                type="text"
-                name="username"
-                value={form.username}
-                onChange={handleChange}
-                placeholder=" "
-                className="peer w-full border-b-2 border-gray-300 focus:border-indigo-500 outline-none py-2 text-gray-700"
-              />
-              <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base">
-                Username
-              </label>
-            </div>
-            <div className="relative">
-              <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder=" "
-                className="peer w-full border-b-2 border-gray-300 focus:border-indigo-500 outline-none py-2 text-gray-700"
-              />
-              <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base">
-                Email
-              </label>
-            </div>
-            <div className="relative">
-              <textarea
-                name="bio"
-                value={form.bio}
-                onChange={handleChange}
-                placeholder=" "
-                rows="3"
-                className="peer w-full border-b-2 border-gray-300 focus:border-indigo-500 outline-none py-2 text-gray-700 resize-none"
-              />
-              <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base">
-                Bio
-              </label>
-            </div>
-            <motion.button
-              whileTap={{ scale: 0.97 }}
-              type="submit"
-              className="w-full py-3 rounded-xl text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:opacity-90 font-semibold transition"
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Profile Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="lg:col-span-2 bg-white rounded-2xl shadow-lg border border-gray-100 p-10"
             >
-              Save Changes
-            </motion.button>
-          </form>
-
-          {/* Password */}
-          <h3 className="text-xl font-semibold text-indigo-600 mb-4">Change Password</h3>
-          <form onSubmit={handlePasswordSubmit} className="space-y-4">
-            {["old_password", "new_password", "confirm_password"].map((field, i) => (
-              <div key={i} className="relative">
-                <input
-                  type="password"
-                  name={field}
-                  value={passwordForm[field]}
-                  onChange={handlePasswordChange}
-                  placeholder=" "
-                  className="peer w-full border-b-2 border-gray-300 focus:border-indigo-500 outline-none py-2 text-gray-700"
-                />
-                <label className="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base">
-                  {field.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase())}
-                </label>
-              </div>
-            ))}
-            <motion.button
-              whileTap={{ scale: 0.97 }}
-              type="submit"
-              className="w-full py-3 rounded-xl text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:opacity-90 font-semibold transition"
-            >
-              Change Password
-            </motion.button>
-          </form>
-        </div>
-
-        {/* Bookings */}
-        <div className="bg-white shadow-xl rounded-3xl p-8 border border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">My Bookings</h2>
-          {bookings.length === 0 ? (
-            <p className="text-gray-500">No booked classes yet.</p>
-          ) : (
-            <div className="space-y-4 max-h-[600px] overflow-y-auto">
-              {bookings.map((booking) => (
-                <div
-                  key={booking.id}
-                  className="flex justify-between items-center p-4 border rounded-xl hover:shadow-lg transition bg-gray-50"
+              {/* Profile Header */}
+              <div className="text-center mb-10 pb-8 border-b border-gray-200">
+                <motion.div 
+                  whileHover={{ scale: 1.05 }}
+                  className="relative w-40 h-40 mx-auto mb-6 group cursor-pointer"
+                  onClick={() => document.getElementById('profile-image-input')?.click()}
                 >
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-800">{booking.slot}</h3>
-                    <p className="text-gray-500 text-sm">
-                      Booked on: {new Date(booking.date_created).toLocaleString()}
-                    </p>
+                  <img
+                    key={profile.profile_image_url || "placeholder"}
+                    src={preview || getFullImageUrl(profile.profile_image_url)}
+                    alt="Profile"
+                    onError={(e) => {
+                      console.error("Image failed to load:", e.target.src);
+                      e.target.src = "https://via.placeholder.com/150";
+                    }}
+                    onLoad={() => {
+                      console.log("Image loaded successfully from:", preview || getFullImageUrl(profile.profile_image_url));
+                    }}
+                    className="w-40 h-40 rounded-full object-cover border-4 border-gradient-to-r from-purple-500 to-indigo-500 shadow-xl"
+                  />
+                  <div className="absolute inset-0 rounded-full bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center">
+                    <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity text-sm font-semibold">Change Photo</span>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <span className={`font-semibold ${booking.status === "Confirmed" ? "text-green-500" : "text-yellow-500"}`}>
-                      {booking.status}
-                    </span>
-                    <button
-                      onClick={() => handleDeleteBooking(booking.id)}
-                      className="flex items-center gap-1 text-red-500 hover:text-red-600 font-semibold transition"
-                    >
-                      <Trash2 size={16} /> Cancel
-                    </button>
-                  </div>
+                  <input 
+                    id="profile-image-input"
+                    type="file" 
+                    hidden 
+                    accept="image/*" 
+                    onChange={handleImageChange}
+                  />
+                </motion.div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">{profile.username}</h2>
+                <p className="text-gray-600 font-medium">{profile.email}</p>
+              </div>
+
+              {/* Edit Profile Form */}
+              <form onSubmit={handleSubmit} className="space-y-6 mb-10">
+                <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                  <User size={24} className="text-purple-600" /> Edit Profile
+                </h3>
+                
+                <div className="space-y-4">
+                  <motion.div 
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="relative"
+                  >
+                    <input
+                      type="text"
+                      name="username"
+                      value={form.username}
+                      onChange={handleChange}
+                      placeholder=" "
+                      className="peer w-full bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-gray-200 focus:border-purple-500 focus:bg-white rounded-xl py-3 px-4 text-gray-900 outline-none transition-all"
+                    />
+                    <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-semibold text-purple-600 transition-all peer-focus:text-purple-600">
+                      Username
+                    </label>
+                  </motion.div>
+
+                  <motion.div 
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.15 }}
+                    className="relative"
+                  >
+                    <input
+                      type="email"
+                      name="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      placeholder=" "
+                      className="peer w-full bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-gray-200 focus:border-purple-500 focus:bg-white rounded-xl py-3 px-4 text-gray-900 outline-none transition-all"
+                    />
+                    <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-semibold text-purple-600 transition-all peer-focus:text-purple-600">
+                      Email
+                    </label>
+                  </motion.div>
+
+                  <motion.div 
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="relative"
+                  >
+                    <textarea
+                      name="bio"
+                      value={form.bio}
+                      onChange={handleChange}
+                      placeholder=" "
+                      rows="4"
+                      className="peer w-full bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-gray-200 focus:border-purple-500 focus:bg-white rounded-xl py-3 px-4 text-gray-900 outline-none transition-all resize-none"
+                    />
+                    <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-semibold text-purple-600 transition-all peer-focus:text-purple-600">
+                      Bio
+                    </label>
+                  </motion.div>
                 </div>
-              ))}
-            </div>
-          )}
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-4 rounded-xl text-white bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 disabled:opacity-50 font-bold transition-all duration-300 shadow-lg"
+                >
+                  {loading ? "Saving..." : "💾 Save Changes"}
+                </motion.button>
+              </form>
+
+              {/* Change Password */}
+              <div className="pt-8 border-t border-gray-200">
+                <form onSubmit={handlePasswordSubmit} className="space-y-6">
+                  <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    <Lock size={24} className="text-purple-600" /> Change Password
+                  </h3>
+                  
+                  <div className="space-y-4">
+                    {[
+                      { field: "old_password", label: "Current Password", icon: "🔐" },
+                      { field: "new_password", label: "New Password", icon: "🔑" },
+                      { field: "confirm_password", label: "Confirm Password", icon: "✓" },
+                    ].map((item, i) => (
+                      <motion.div 
+                        key={item.field}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.3 + i * 0.05 }}
+                        className="relative"
+                      >
+                        <input
+                          type="password"
+                          name={item.field}
+                          value={passwordForm[item.field]}
+                          onChange={handlePasswordChange}
+                          placeholder=" "
+                          className="peer w-full bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-gray-200 focus:border-purple-500 focus:bg-white rounded-xl py-3 px-4 text-gray-900 outline-none transition-all"
+                        />
+                        <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-semibold text-purple-600 transition-all peer-focus:text-purple-600">
+                          {item.label}
+                        </label>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="submit"
+                    className="w-full py-4 rounded-xl text-white bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 font-bold transition-all duration-300 shadow-lg"
+                  >
+                    🔒 Change Password
+                  </motion.button>
+                </form>
+              </div>
+            </motion.div>
+
+            {/* Bookings Sidebar */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="lg:col-span-1 bg-white rounded-2xl shadow-lg border border-gray-100 p-10 h-fit"
+            >
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <BookOpen size={28} className="text-purple-600" /> My Bookings
+              </h2>
+              
+              {bookings.length === 0 ? (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-center py-12"
+                >
+                  <Calendar size={48} className="mx-auto text-gray-300 mb-3" />
+                  <p className="text-gray-500 font-medium">No booked classes yet.</p>
+                  <p className="text-gray-400 text-sm mt-2">Book a class to get started!</p>
+                </motion.div>
+              ) : (
+                <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+                  {bookings.map((booking, idx) => (
+                    <motion.div
+                      key={booking.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                      whileHover={{ x: 4, boxShadow: "0 8px 16px rgba(0, 0, 0, 0.08)" }}
+                      className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-4 border border-purple-100 group"
+                    >
+                      <div className="flex justify-between items-start gap-2">
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-gray-900 text-sm group-hover:text-purple-600 transition">{booking.slot}</h3>
+                          <p className="text-gray-500 text-xs mt-1 flex items-center gap-1">
+                            <Calendar size={12} />
+                            {new Date(booking.date_created).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <div className="flex flex-col items-end gap-2">
+                          <span className={`text-xs font-bold px-2 py-1 rounded-lg flex items-center gap-1 ${booking.status === "Confirmed" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}>
+                            <CheckCircle2 size={14} /> {booking.status}
+                          </span>
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => handleDeleteBooking(booking.id)}
+                            className="text-red-500 hover:text-red-700 hover:bg-red-50 p-1.5 rounded-lg transition-all"
+                            title="Cancel booking"
+                          >
+                            <Trash2 size={16} />
+                          </motion.button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </div>
         </div>
       </div>
     </div>

@@ -9,9 +9,16 @@ const Hero = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-50 via-white to-indigo-100 overflow-x-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 overflow-x-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div className="absolute top-40 right-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-1/2 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+      </div>
+      
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 w-full bg-white/70 backdrop-blur-md shadow-sm z-50 flex justify-between items-center px-8 py-4">
+      <nav className="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-lg shadow-md z-50 flex justify-between items-center px-8 py-4 border-b border-gray-100">
         <motion.h1
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -22,15 +29,15 @@ const Hero = () => {
         </motion.h1>
 
         <div className="hidden md:flex items-center gap-8 text-gray-700 font-medium">
-          <a href="#about" className="hover:text-purple-600 transition">About</a>
-          <a href="#features" className="hover:text-purple-600 transition">Features</a>
-          <a href="#screenshots" className="hover:text-purple-600 transition">Screenshots</a>
-          <a href="#pricing" className="hover:text-purple-600 transition">Prices</a>
-          <a href="#contact" className="hover:text-purple-600 transition">Contact Us</a>
+          <a href="#about" className="hover:text-purple-600 transition duration-300">About</a>
+          <a href="#features" className="hover:text-purple-600 transition duration-300">Features</a>
+          <a href="#screenshots" className="hover:text-purple-600 transition duration-300">Screenshots</a>
+          <a href="#pricing" className="hover:text-purple-600 transition duration-300">Prices</a>
+          <a href="#contact" className="hover:text-purple-600 transition duration-300">Contact Us</a>
 
           <Button
             onClick={() => navigate("/login")}
-            className="bg-purple-600 hover:bg-purple-700 text-white rounded-xl px-5 py-2 text-sm"
+            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl px-6 py-2 text-sm font-semibold shadow-lg transition duration-300"
           >
             Sign In
           </Button>
@@ -38,7 +45,7 @@ const Hero = () => {
       </nav>
 
       {/* Hero content */}
-      <div className="flex flex-col-reverse lg:flex-row items-center justify-center gap-12 px-6 mt-24">
+      <div className="flex flex-col-reverse lg:flex-row items-center justify-center gap-12 px-6 mt-24 relative z-10">
         {/* Left text */}
         <motion.div
           initial={{ opacity: 0, x: -40 }}
@@ -57,19 +64,23 @@ const Hero = () => {
             motivated, and unlock achievements along your study journey.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-            <Button
-              onClick={() => navigate("/dashboard")}
-              className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl text-lg flex items-center gap-2 shadow-md"
-            >
-              Launch App <ArrowRight className="w-5 h-5" />
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => document.getElementById("features").scrollIntoView({ behavior: "smooth" })}
-              className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50 px-6 py-3 rounded-xl text-lg"
-            >
-              Learn More
-            </Button>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                onClick={() => navigate("/dashboard")}
+                className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-3 rounded-xl text-lg flex items-center gap-2 shadow-xl transition duration-300"
+              >
+                Launch App <ArrowRight className="w-5 h-5" />
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                variant="outline"
+                onClick={() => document.getElementById("features").scrollIntoView({ behavior: "smooth" })}
+                className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50 px-8 py-3 rounded-xl text-lg font-semibold transition duration-300"
+              >
+                Learn More
+              </Button>
+            </motion.div>
           </div>
         </motion.div>
 
@@ -83,7 +94,7 @@ const Hero = () => {
           <img
             src={example}
             alt="StudyHub Dashboard"
-            className="w-[300px] sm:w-[450px] lg:w-[600px] rounded-2xl shadow-lg border border-gray-200"
+            className="w-[300px] sm:w-[450px] lg:w-[600px] rounded-2xl shadow-2xl border border-gray-200 hover:shadow-3xl transition duration-300"
           />
         </motion.div>
       </div>

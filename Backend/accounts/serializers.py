@@ -9,15 +9,30 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "username", "email", "bio", "profile_image_url"]
+        fields = ["id", "username", "email", "bio", "profile_image", "profile_image_url"]
+        extra_kwargs = {
+            'profile_image': {'required': False, 'allow_null': True}
+        }
 
     def get_profile_image_url(self, obj):
-        request = self.context.get("request")
-        if obj.profile_image and hasattr(obj.profile_image, 'url'):
-            if request:
-                return request.build_absolute_uri(obj.profile_image.url)
-            return obj.profile_image.url
+        """Generate full URL for profile image"""
+        if obj.profile_image:
+            try:
+                image_url = obj.profile_image.url
+                # Always return the relative URL, let the frontend build the full URL if needed
+                return image_url
+            except Exception as e:
+                print(f"Error getting profile image URL: {e}")
+                return None
         return None
+
+    def to_representation(self, instance):
+        """Ensure profile_image_url is always included"""
+        data = super().to_representation(instance)
+        # Always include the URL even if image field is empty
+        if 'profile_image_url' not in data:
+            data['profile_image_url'] = self.get_profile_image_url(instance)
+        return data
 
 
 class RegisterSerializer(serializers.ModelSerializer):

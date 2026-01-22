@@ -22,12 +22,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!-rs%$w(wzu5g=3)2*h(^d5hy9(d)-u$zw_n^b7r4uux*3^rt^'
+from decouple import config as decouple_config
+SECRET_KEY = decouple_config('SECRET_KEY', default='django-insecure-!-rs%$w(wzu5g=3)2*h(^d5hy9(d)-u$zw_n^b7r4uux*3^rt^')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = decouple_config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = decouple_config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
 
 # Allow only your frontend URLs
 CORS_ALLOW_ALL_ORIGINS = False
@@ -44,7 +45,10 @@ import os
 
 load_dotenv()
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+# Only set GOOGLE_APPLICATION_CREDENTIALS if it's provided
+google_creds = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+if google_creds:
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = google_creds
 
 # Application definition
 
@@ -68,7 +72,7 @@ INSTALLED_APPS = [
 
 from decouple import config
 
-GOOGLE_API_KEY = config("GOOGLE_API_KEY")
+GOOGLE_API_KEY = config("GOOGLE_API_KEY", default="")
 
 
 
@@ -141,12 +145,8 @@ else:
     # local development fallback (your current local DB)
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'mydb',
-            'USER': 'postgres',
-            'PASSWORD': 'Mmoataz0000',
-            'HOST': 'localhost',
-            'PORT': '5432',
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
 
@@ -192,6 +192,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# CORS settings for media files
+CORS_EXPOSE_HEADERS = ['Content-Type']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

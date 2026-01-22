@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import {
   Zap,
   UserRoundPen,
@@ -146,172 +147,240 @@ const DashboardPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-100 p-6">
-      {/* Header */}
-      <header className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
-          StudyHub
-        </h1>
-        <button
-          onClick={handleProfile}
-          className="flex items-center gap-2 rounded-lg bg-purple-500 px-4 py-2 text-white hover:bg-purple-600 transition-all duration-300"
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-6 overflow-x-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div className="absolute top-40 right-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-1/2 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+      </div>
+
+      <div className="relative z-10">
+        {/* Header */}
+        <motion.header 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex justify-between items-center mb-8"
         >
-          <UserRoundPen size={24} />
-          <span className="hidden md:inline text-sm font-medium">Profile</span>
-        </button>
-      </header>
-
-      {/* Welcome */}
-      <div className="mb-8 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-500 p-8 text-white shadow-lg hover:scale-[1.02] transition-all duration-300">
-        <h2 className="text-2xl font-semibold">
-          Welcome back, {username}! 👋
-        </h2>
-        <p className="mt-2 opacity-90 italic">{randomQuote}</p>
-      </div>
-
-      {/* Features */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        {features.map(({ icon, title, desc, progress, link, color }, i) => (
-          <div
-            key={i}
-            className="relative overflow-hidden rounded-2xl bg-white p-6 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+          <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+            StudyHub
+          </h1>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleProfile}
+            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 px-6 py-3 text-white hover:from-purple-600 hover:to-indigo-600 transition-all duration-300 shadow-lg font-semibold"
           >
-            <div
-              className={`absolute top-0 right-0 h-24 w-24 rounded-full bg-gradient-to-br ${color} opacity-20 blur-3xl`}
-            ></div>
+            <UserRoundPen size={24} />
+            <span className="hidden md:inline text-sm">Profile</span>
+          </motion.button>
+        </motion.header>
 
-            <div className="flex items-center gap-3 mb-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 text-indigo-600">
-                {icon}
-              </div>
-              <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
-            </div>
+        {/* Welcome */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="mb-8 rounded-2xl bg-gradient-to-r from-purple-500 to-indigo-500 p-8 text-white shadow-lg hover:shadow-xl transition-all duration-300 border border-purple-300/20"
+        >
+          <h2 className="text-3xl font-bold">
+            Welcome back, {username}! 👋
+          </h2>
+          <p className="mt-3 opacity-90 italic text-lg">{randomQuote}</p>
+        </motion.div>
 
-            <p className="text-gray-600 mb-4 text-sm">{desc}</p>
-
-            <div className="flex justify-center mb-4">
-              <div className="w-20">
-                <CircularProgressbar
-                  value={progress}
-                  text={`${progress}%`}
-                  strokeWidth={8}
-                  styles={buildStyles({
-                    textSize: "26px",
-                    pathColor: `#6366f1`,
-                    textColor: "#4B5563",
-                    trailColor: "#E5E7EB",
-                  })}
-                />
-              </div>
-            </div>
-
-            <Link
-              to={link}
-              className="block text-center w-full rounded-lg bg-indigo-500 px-4 py-2 text-white font-medium hover:bg-indigo-600 transition-colors duration-300"
+        {/* Features */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {features.map(({ icon, title, desc, progress, link, color }, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(0, 0, 0, 0.1)" }}
+              className="relative overflow-hidden rounded-2xl bg-white p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 group"
             >
-              Open
-            </Link>
-          </div>
-        ))}
-      </div>
+              <div
+                className={`absolute top-0 right-0 h-24 w-24 rounded-full bg-gradient-to-br ${color} opacity-20 blur-3xl group-hover:opacity-30 transition duration-300`}
+              ></div>
 
-      {/* Leaderboard & Booking */}
-      <div className="grid md:grid-cols-3 gap-6 mb-12">
-        {/* Leaderboard */}
-        <div className="md:col-span-1">
-          <div className="bg-white shadow-md rounded-2xl overflow-hidden">
-            <div className="bg-gray-100 py-2 px-4 flex items-center gap-2">
-              <Trophy className="text-yellow-500" />
-              <h2 className="text-lg font-semibold text-gray-800">
-                Top Learners
-              </h2>
-            </div>
-
-            <ul className="divide-y divide-gray-200">
-              {data?.leaderboard?.slice(0, 5).map((user, index) => (
-                <li key={index} className="flex items-center py-4 px-6">
-                  <span className="text-gray-700 text-base font-medium mr-3">
-                    {getBadge(index)} {index + 1}.
-                  </span>
-                  <img
-                    className="w-10 h-10 rounded-full object-cover mr-4 border border-gray-300"
-                    src={
-                      user.profile_image_url ||
-                      `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                        user.username
-                      )}&background=random`
-                    }
-                    alt={user.username}
-                  />
-                  <div className="flex-1">
-                    <h3 className="text-base font-semibold text-gray-800 truncate">
-                      {user.username}
-                    </h3>
-                    <p className="text-gray-600 text-sm">
-                      {user.score} pts 
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* Booking */}
-        <div className="md:col-span-2">
-          <div className="bg-white shadow-md rounded-2xl p-6 flex flex-col gap-6 hover:shadow-lg transition-shadow duration-300">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl md:text-2xl font-bold text-gray-800">
-                Book a Live Class
-              </h2>
-            </div>
-
-            <p className="text-gray-600 text-sm md:text-base">
-              Schedule a live English session with our tutors.
-            </p>
-
-            <div className="flex flex-wrap gap-3">
-              {availableSlots.map((slot, i) => (
-                <div
-                  key={i}
-                  className={`px-4 py-2 rounded-full text-sm font-medium cursor-pointer transition-all ${
-                    selectedSlot === slot
-                      ? "bg-indigo-500 text-white shadow-md"
-                      : "bg-gray-100 text-gray-800 hover:bg-gray-200"
-                  }`}
-                  onClick={() => setSelectedSlot(slot)}
+              <div className="flex items-center gap-3 mb-4">
+                <motion.div 
+                  whileHover={{ rotate: 360, scale: 1.1 }}
+                  transition={{ duration: 0.5 }}
+                  className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-purple-100 to-indigo-100 text-indigo-600 shadow-md"
                 >
-                  {slot}
+                  {icon}
+                </motion.div>
+                <h3 className="text-lg font-bold text-gray-900">{title}</h3>
+              </div>
+
+              <p className="text-gray-700 mb-4 text-sm font-medium">{desc}</p>
+
+              <div className="flex justify-center mb-6">
+                <div className="w-24">
+                  <CircularProgressbar
+                    value={progress}
+                    text={`${progress}%`}
+                    strokeWidth={6}
+                    styles={buildStyles({
+                      textSize: "22px",
+                      pathColor: `url(#colorful)`,
+                      textColor: "#6366f1",
+                      trailColor: "#e5e7eb",
+                      rotation: 0.25,
+                    })}
+                  />
                 </div>
-              ))}
-            </div>
+              </div>
 
-            {bookingStatus?.success && (
-              <p className="text-green-600 mt-2 animate-pulse">
-                {bookingStatus.success}
-              </p>
-            )}
-            {bookingStatus?.error && (
-              <p className="text-red-600 mt-2">{bookingStatus.error}</p>
-            )}
-
-            <button
-              onClick={handleBookClass}
-              disabled={bookingLoading}
-              className="w-full md:w-1/2 bg-indigo-500 text-white font-semibold py-3 rounded-xl shadow-sm hover:bg-indigo-600 transition-all duration-300 mt-4 flex items-center justify-center"
-            >
-              {bookingLoading ? <Loader2 className="animate-spin mr-2" /> : "Book Now"}
-            </button>
-          </div>
+              <Link
+                to={link}
+                className="block text-center w-full rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 px-4 py-3 text-white font-bold hover:from-purple-600 hover:to-indigo-600 transition-all duration-300 shadow-md hover:shadow-lg"
+              >
+                Open
+              </Link>
+            </motion.div>
+          ))}
         </div>
-      </div>
 
-      {/* Footer */}
-      <footer className="mt-12 text-center text-gray-500 text-sm border-t border-gray-200 pt-4">
-        © 2025 <span className="font-semibold text-indigo-500">StudyHub</span> — Learn. Practice. Grow.
-      </footer>
+        {/* Leaderboard & Booking */}
+        <div className="grid md:grid-cols-3 gap-6 mb-12">
+          {/* Leaderboard */}
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="md:col-span-1"
+          >
+            <div className="bg-white shadow-lg rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+              <div className="bg-gradient-to-r from-purple-500 to-indigo-500 py-4 px-6 flex items-center gap-3">
+                <Trophy className="text-white w-6 h-6" />
+                <h2 className="text-lg font-bold text-white">
+                  Top Learners
+                </h2>
+              </div>
+
+              <ul className="divide-y divide-gray-200">
+                {data?.leaderboard?.slice(0, 5).map((user, index) => (
+                  <motion.li 
+                    key={index}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="flex items-center py-4 px-6 hover:bg-purple-50/50 transition duration-300"
+                  >
+                    <span className="text-2xl mr-3 w-8">
+                      {getBadge(index)}
+                    </span>
+                    <span className="text-gray-700 text-sm font-bold mr-2">
+                      {index + 1}.
+                    </span>
+                    <img
+                      className="w-10 h-10 rounded-full object-cover mr-4 border-2 border-purple-200 shadow-md"
+                      src={
+                        user.profile_image_url ||
+                        `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                          user.username
+                        )}&background=random`
+                      }
+                      alt={user.username}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-base font-bold text-gray-900 truncate">
+                        {user.username}
+                      </h3>
+                      <p className="text-purple-600 text-sm font-semibold">
+                        {user.score} pts 
+                      </p>
+                    </div>
+                  </motion.li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
+
+          {/* Booking */}
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="md:col-span-2"
+          >
+            <div className="bg-white shadow-lg rounded-2xl p-8 flex flex-col gap-6 hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                  Book a Live Class
+                </h2>
+              </div>
+
+              <p className="text-gray-700 text-base font-medium">
+                Schedule a live English session with our tutors.
+              </p>
+
+              <div className="flex flex-wrap gap-3">
+                {availableSlots.map((slot, i) => (
+                  <motion.div
+                    key={i}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`px-5 py-3 rounded-full text-sm font-bold cursor-pointer transition-all border-2 ${
+                      selectedSlot === slot
+                        ? "bg-gradient-to-r from-purple-500 to-indigo-500 text-white border-purple-500 shadow-lg"
+                        : "bg-gray-50 text-gray-800 hover:bg-gray-100 border-gray-200 hover:border-gray-300"
+                    }`}
+                    onClick={() => setSelectedSlot(slot)}
+                  >
+                    {slot}
+                  </motion.div>
+                ))}
+              </div>
+
+              {bookingStatus?.success && (
+                <motion.p 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-green-600 mt-2 animate-pulse font-semibold text-base"
+                >
+                  {bookingStatus.success}
+                </motion.p>
+              )}
+              {bookingStatus?.error && (
+                <motion.p 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-red-600 mt-2 font-semibold text-base"
+                >
+                  {bookingStatus.error}
+                </motion.p>
+              )}
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleBookClass}
+                disabled={bookingLoading}
+                className="w-full md:w-1/2 bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-bold py-4 rounded-xl shadow-lg hover:from-purple-600 hover:to-indigo-600 transition-all duration-300 mt-4 flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {bookingLoading ? <Loader2 className="animate-spin w-5 h-5" /> : "Book Now"}
+              </motion.button>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Footer */}
+        <motion.footer 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="mt-12 text-center text-gray-600 text-sm border-t border-gray-200 pt-6 font-medium"
+        >
+          © 2025 <span className="font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">StudyHub</span> — Learn. Practice. Grow.
+        </motion.footer>
 
       <PracticeButton />
+      </div>
     </div>
   );
 };
