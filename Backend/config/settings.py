@@ -37,7 +37,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",   # Vite dev server
     "http://localhost:5173",
     "https://322bd694d365.ngrok-free.app",
-    "https://studyhub-full-1.onrender.com" # some setups use localhost instead of 127.0.0.1
+    "https://studyhub-full-1.onrender.com",
+    "https://studyhub-full-jvac.onrender.com"
 ]
 
 from dotenv import load_dotenv
