@@ -42,14 +42,18 @@ function Login() {
         password: formData.password,
       };
 
+      console.log("Logging in with:", payload);
       const res = await API.post("auth/token/", payload);
+      console.log("Login response:", res.data);
 
       localStorage.setItem("token", res.data.access);
       localStorage.setItem("refresh", res.data.refresh);
 
+      console.log("Token saved, navigating to dashboard...");
       navigate("/dashboard");
     } catch (err) {
-      setError("Invalid username or password.");
+      console.error("Login error:", err);
+      setError(err.response?.data?.detail || "Invalid username or password.");
     } finally {
       setLoading(false);
     }
