@@ -212,10 +212,10 @@ const Profile = () => {
               className="lg:col-span-2 bg-white rounded-2xl shadow-lg border border-gray-100 p-10"
             >
               {/* Profile Header */}
-              <div className="text-center mb-10 pb-8 border-b border-gray-200">
+              <div className="text-center mb-12 pb-12 border-b-2 border-gray-200 bg-gradient-to-br from-purple-50 to-indigo-50 -mx-10 px-10 py-10 rounded-2xl">
                 <motion.div 
-                  whileHover={{ scale: 1.05 }}
-                  className="relative w-40 h-40 mx-auto mb-6 group cursor-pointer"
+                  whileHover={{ scale: 1.08 }}
+                  className="relative w-80 h-80 mx-auto mb-10 group cursor-pointer"
                   onClick={() => document.getElementById('profile-image-input')?.click()}
                 >
                   <img
@@ -229,10 +229,10 @@ const Profile = () => {
                     onLoad={() => {
                       console.log("Image loaded successfully from:", preview || getFullImageUrl(profile.profile_image_url));
                     }}
-                    className="w-40 h-40 rounded-full object-cover border-4 border-gradient-to-r from-purple-500 to-indigo-500 shadow-xl"
+                    className="w-80 h-80 rounded-full object-cover border-8 border-gradient-to-r from-purple-500 to-indigo-500 shadow-2xl"
                   />
-                  <div className="absolute inset-0 rounded-full bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center">
-                    <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity text-sm font-semibold">Change Photo</span>
+                  <div className="absolute inset-0 rounded-full bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
+                    <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity text-lg font-bold">Change Photo</span>
                   </div>
                   <input 
                     id="profile-image-input"
@@ -242,8 +242,8 @@ const Profile = () => {
                     onChange={handleImageChange}
                   />
                 </motion.div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">{profile.username}</h2>
-                <p className="text-gray-600 font-medium">{profile.email}</p>
+                <h2 className="text-5xl font-bold text-gray-900 mb-4">{profile.username}</h2>
+                <p className="text-xl text-gray-600 font-medium">{profile.email}</p>
               </div>
 
               {/* Edit Profile Form */}
