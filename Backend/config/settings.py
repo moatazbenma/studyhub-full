@@ -38,7 +38,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://322bd694d365.ngrok-free.app",
     "https://studyhub-full-1.onrender.com",
-    "https://studyhub-full-jvac.onrender.com"
+    "https://studyhub-full-jvac.onrender.com",
+    "https://studyhub-app-red.vercel.app"
 ]
 
 from dotenv import load_dotenv
