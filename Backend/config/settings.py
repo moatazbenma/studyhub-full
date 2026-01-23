@@ -39,7 +39,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://322bd694d365.ngrok-free.app",
     "https://studyhub-full-1.onrender.com",
     "https://studyhub-full-jvac.onrender.com",
-    "https://studyhub-app-red.vercel.app"
+    "https://studyhub-app-red.vercel.app",
+    "https://studyhub-full.vercel.app"
 ]
 
 from dotenv import load_dotenv
