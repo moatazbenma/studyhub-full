@@ -46,13 +46,19 @@ function Login() {
       const res = await API.post("auth/token/", payload);
       console.log("Login response:", res.data);
 
-      localStorage.setItem("token", res.data.access);
-      localStorage.setItem("refresh", res.data.refresh);
-
-      console.log("Token saved, navigating to dashboard...");
-      navigate("/dashboard");
+      if (res.data.access) {
+        localStorage.setItem("token", res.data.access);
+        localStorage.setItem("refresh", res.data.refresh);
+        
+        alert("Login successful! Redirecting to dashboard...");
+        console.log("Token saved, navigating to dashboard...");
+        
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 100);
+      }
     } catch (err) {
-      console.error("Login error:", err);
+      console.error("Login error:", err.response?.data || err.message);
       setError(err.response?.data?.detail || "Invalid username or password.");
     } finally {
       setLoading(false);
