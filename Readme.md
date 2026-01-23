@@ -234,47 +234,6 @@ For production, update:
 
 ---
 
-## 🌐 Deployment
-
-Your project is **production-ready** and can be deployed to **Netlify + Render**:
-
-### Frontend → Netlify
-
-1. **Build the project:**
-   ```bash
-   cd Frontend/y && npm run build
-   ```
-
-2. **Deploy to Netlify:**
-   - Go to [netlify.com](https://netlify.com)
-   - Connect your GitHub repository
-   - Build command: `cd Frontend/y && npm install && npm run build`
-   - Publish directory: `Frontend/y/dist`
-
-### Backend → Render
-
-1. **Go to [render.com](https://render.com)**
-
-2. **Create Web Service:**
-   - Connect GitHub repository
-   - Build: `pip install -r requirements.txt && python manage.py migrate`
-   - Start: `gunicorn config.wsgi:application`
-
-3. **Add PostgreSQL Database:**
-   - Create PostgreSQL instance
-   - Set `DATABASE_URL` environment variable
-
-4. **Set Environment Variables:**
-   ```env
-   DEBUG=False
-   SECRET_KEY=your-production-key
-   DATABASE_URL=postgresql://...
-   ALLOWED_HOSTS=your-domain.onrender.com
-   ```
-
-**Total Cost:** $0/month (free tier) ✅
-
-For detailed instructions, see [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)
 
 ---
 

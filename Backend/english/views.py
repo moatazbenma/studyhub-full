@@ -17,7 +17,7 @@ def correct_writing(request):
                 return JsonResponse({"error": "No text provided"}, status=400)
 
             response = requests.post(
-                "https://api.languagetool.org/v2/check",
+                "https://api.languagetoolplus.com/v2/check",
                 data={
                     "text": text,
                     "language": "en-US"

@@ -63,11 +63,11 @@ const Hero = () => {
             Your AI-powered learning companion — track your progress, stay
             motivated, and unlock achievements along your study journey.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center sm:items-start">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 onClick={() => navigate("/dashboard")}
-                className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-3 rounded-xl text-lg flex items-center gap-2 shadow-xl transition duration-300"
+                className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-3 rounded-xl text-lg flex items-center gap-2 shadow-xl transition duration-300 w-full sm:w-auto justify-center"
               >
                 Launch App <ArrowRight className="w-5 h-5" />
               </Button>
@@ -76,7 +76,7 @@ const Hero = () => {
               <Button
                 variant="outline"
                 onClick={() => document.getElementById("features").scrollIntoView({ behavior: "smooth" })}
-                className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50 px-8 py-3 rounded-xl text-lg font-semibold transition duration-300"
+                className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50 px-8 py-3 rounded-xl text-lg font-semibold transition duration-300 w-full sm:w-auto justify-center"
               >
                 Learn More
               </Button>
