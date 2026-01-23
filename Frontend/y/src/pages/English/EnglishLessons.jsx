@@ -398,15 +398,10 @@ const EnglishLessonCards = ({ refreshDashboard }) => {
                     setLoading(true);
                     setWritingFeedback(null);
                     try {
-                      const res = await fetch("http://localhost:8000/api/english/correct-writing", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ text: userWriting }),
-                      });
-                      const data = await res.json();
-                      setWritingFeedback(data);
+                      const res = await API.post("english/correct-writing", { text: userWriting });
+                      setWritingFeedback(res.data);
                     } catch (err) {
-                      alert("Error connecting to AI feedback service.");
+                      alert("Error connecting to feedback service: " + (err.response?.data?.error || err.message));
                     } finally {
                       setLoading(false);
                     }
